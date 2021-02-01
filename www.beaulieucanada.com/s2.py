@@ -129,9 +129,6 @@ for page_url in page_urls:
     # Details scrape
     navs_length = len(navs)
     print("nav length: " + str(navs_length))
-
-    nav_check = driver.find_elements_by_xpath('//ul[@class="nav"]/li/a')
-    nav_checker = nav_check[3].text
     if navs_length == 6:
         navs[1].click()
         details = ''
@@ -198,7 +195,7 @@ for page_url in page_urls:
         except:
             print("No maintenance")
             maintenance = 'N/A'
-    elif nav_checker == 'Moldings':
+    else:
         navs[1].click()
         details = ''
         try:
@@ -260,57 +257,6 @@ for page_url in page_urls:
             print("No installations")
         
         maintenance = 'N/A'
-
-    else:
-        navs[1].click()
-        details = ''
-        try:
-            details1 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/div/div/dl/dt')
-            details2 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/div/div/dl/dd')
-            length = len(details1)
-            i = 0
-            while i < length:
-                details += "<dt>" + details1[i].text + "</dt> <dd>" + details2[i].text + "<>/dd "
-                i += 1
-        except:
-            print("No details")
-            details = 'N/A'
-
-        navs[2].click()
-        pakaging = ''
-        try:
-            pakaging1 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/div/div/dl/dt')
-            pakaging2 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/div/div/dl/dd')
-            length = len(pakaging1)
-            i = 0
-            while i < length:
-                pakaging += "<dt>" + pakaging1[i].text + "</dt> <dd>" + pakaging2[i].text + "</dd> "
-                i += 1
-        except:
-            print("No pakaging")
-            pakaging = 'N/A'
-        navs[3].click()
-        
-        installations = ''
-        try:
-            installations1 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/div/div/div/div[@class="col-12"]/p')
-            installations2 = driver.find_elements_by_xpath('//div[@class="tw-w-full tw-flex tw-flex-wrap"]/div/p')
-            installations3 = driver.find_elements_by_xpath('//div[@class="tw-flex tw-flex-wrap"]/div/p')
-            installations += "<p>" + installations1[0].text + "</p>: "
-            for installation2 in installations2:
-                installations += "<p>" + installation2.text + "</p>"
-            installations += "<p>" + installations1[1].text + "</p>: "
-            for installation3 in installations3:
-                installations += "<p>" + installation3.text + "</p>"
-        except:
-            print("No installations")
-        
-        navs[4].click()
-        try:
-            maintenance = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
-        except:
-            print("No maintenance")
-        modelings = 'N/A'
 
     try:
         liElement = driver.find_element_by_xpath('//div[@class="agile__list"]')

@@ -37,7 +37,7 @@ states_len = len(states)
 # print(states)
 page_urls = []
 j = 1
-while j < 3:
+while j < states_len:
 
     time.sleep(5)
     
