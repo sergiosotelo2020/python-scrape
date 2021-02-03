@@ -1,4 +1,5 @@
 import csv
+from typing import Collection
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
@@ -16,13 +17,13 @@ print(now)
 def add_csv_head():
     with open(output_file, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow(['Title', 'Description', 'Details', 'Pakaging', 'Modelings', 'Installations', 'Maintenance', 'Tile image'])
+        writer.writerow(['Title'',sub-title','Description','Details','Brand','Collection','Style Name','Style Number','construction','Material','Backing','Wear Layer Thickness','Total Thickness','Width','Finish','Top' 'Surface','Interlayer','Design','Weight','Modelings','Installations','installation_method','Maintenance','Tile image'])
 
-def add_csv_row(title, description, details, pakaging, modelings, installations, maintenance, tile_image):
+def add_csv_row(title,sub_title,description,details,brand,collection,style_name,style_number,construction,material,backing,wear_layer_thickness,total_thickness,width,finish,top_surface,interlayer,design,weight,modelings,installations,installation_method,maintenance,tile_image):
 
     with open(output_file, 'a', newline='', encoding="utf-8") as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow([title, description, details, pakaging, modelings, installations, maintenance, tile_image])
+        writer.writerow([title,sub_title,description,details,brand,collection,style_name,style_number,construction,material,backing,wear_layer_thickness,total_thickness,width,finish,top_surface,interlayer,design,weight,modelings,installations,installation_method,maintenance,tile_image])
 
 option = webdriver.ChromeOptions()
 option.add_argument('headless')
@@ -80,55 +81,37 @@ for page_url in page_urls:
     except:
         title = 'N/A'
     # Description scrape
-    description = ''
     try:
-        descriptions1 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/div/p')
-        for description1 in descriptions1:
-            description += "<p>" + description1.text + "</p> "
+        sub_title = driver.find_element_by_xpath('//p/strong').text
     except:
-        print('No description1')
+        sub_title = 'N/A'
+
     try:
-        descriptions2 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/ul/li')
-        description += "<ul>"
-        for description2 in descriptions2:
-            description += "<li>" + description2.text + "</li>"
-        description += "</ul> "
+        description = driver.find_element_by_xpath('//div[@class="tab-pane active"]/section/div/p').text
+    except:
+        print('No description')
+        description = 'N/A'
+
+    details = ''
+    try:
+        details_tmp = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/ul/li')
+        details += "'"
+        for detail_tmp in details_tmp:
+            description += detail_tmp.text + "\n"
+        details += "'"
     except:
         print('No description2')
-    try:
-        descriptions3 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/dl/dt')
-        descriptions4 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/dl/dd')
-        length = len(descriptions3)
-        i = 0
-        while i < length:
-            description += "<dt>" + descriptions3[i].text + "</dt><dd>" + descriptions4[i].text + "</dd> "
-            i += 1
-    except:
-        print('No description3')
-    
-    try:
-        descriptions5 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/div[@class="my-3"]/h3')
-        description += "<h3>" + descriptions5[0].text + "</h3> "
-        descriptions6 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/div[@class="my-3"]/dl/dt')
-        descriptions7 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/div[@class="my-3"]/dl/dd')
-        ll = len(descriptions6)
-        i = 0
-        while i < 6:
-            description += "<dt>" + descriptions6[i].text + "</dt><dd>" + descriptions7[i].text + "</dd> "
-            i += 1
-        description += "<h3>" + descriptions5[1].text + "</h3> "
-        i = 6
-        while i < ll:
-            description += "<dt>" + descriptions6[i].text + "</dt><dd>" + descriptions7[i].text + "</dd> "
-            i += 1
-    except:
-        print("No description 5")
-    description.replace(',', '.')
-    
+        details = 'N/A'
+       
     navs = driver.find_elements_by_xpath('//ul[@class="nav"]/li[@class="nav-item"]')
     # Details scrape
     navs_length = len(navs)
     print("nav length: " + str(navs_length))
+
+    nav_check = driver.find_elements_by_xpath('//ul[@class="nav"]/li/a')
+    nav_checker = nav_check[3].text
+
+    brand = ''
     if navs_length == 6:
         navs[1].click()
         details = ''
@@ -191,11 +174,11 @@ for page_url in page_urls:
         
         navs[5].click()
         try:
-            maintenance = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
+            maintenances = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
         except:
             print("No maintenance")
-            maintenance = 'N/A'
-    else:
+            maintenances = 'N/A'
+    elif nav_checker == 'Moldings':
         navs[1].click()
         details = ''
         try:
@@ -256,7 +239,63 @@ for page_url in page_urls:
         except:
             print("No installations")
         
-        maintenance = 'N/A'
+        maintenances = 'N/A'
+
+    else:
+        navs[1].click()
+        try:
+            details2 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/div/div/dl/dd')
+            length = len(details2)
+            i = 0
+            brand = details2[0].text
+            collection = details2[1].text
+            style_name = details2[2].text
+            style_number = details2[3].text
+            construction = details2[4].text
+            material = details2[5].text
+            backing = details2[6].text
+            wear_layer_thickness = details2[7].text
+            total_thickness = details2[8].text
+            width = details[9].text
+            finish = details[10].text
+            top_surface = details[11].text
+            interlayer = details[12].text
+            design = details[13].text
+
+        except:
+            print("No details")
+
+        navs[2].click()
+        try:
+            weight = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/dl/dd').text
+        except:
+            print("No weight")
+            weight = 'N/A'
+
+        navs[3].click()
+        
+        installations = ''
+        installation_method = ''
+        try:
+            installations2 = driver.find_elements_by_xpath('//div[@class="tw-w-full tw-flex tw-flex-wrap"]/div/p')
+            installations3 = driver.find_elements_by_xpath('//div[@class="tw-flex tw-flex-wrap"]/div/p')
+            for installation2 in installations2:
+                installations += "<p>" + installation2.text + "</p>"
+            installation_method += '"' 
+            for installation3 in installations3:
+                installation_method += installation3.text + ","
+            installation_method += '"'
+        except:
+            print("No installations")
+            installation_method = "N/A"
+            installations = "N/A"
+        
+        navs[4].click()
+        try:
+            maintenance = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
+        except:
+            print("No maintenance")
+        modelings = 'N/A'
 
     try:
         liElement = driver.find_element_by_xpath('//div[@class="agile__list"]')
@@ -270,7 +309,7 @@ for page_url in page_urls:
         print("No tile_image")
         tile_image = 'N/A'
 
-    add_csv_row(title, description, details, pakaging, modelings, installations, maintenance, tile_image)
+    add_csv_row(title,sub_title, description, details, brand, collection, style_name, style_number, construction, material, backing, wear_layer_thickness, total_thickness, width, finish, top_surface, interlayer, design, weight, modelings, installations, installation_method, maintenance, tile_image) 
 
     print("detail page done")
     print(count)

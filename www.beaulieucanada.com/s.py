@@ -18,11 +18,11 @@ def add_csv_head():
         writer = csv.writer(csv_file)
         writer.writerow(['Title', 'Description', 'Details', 'Pakaging', 'Modelings', 'Installations', 'Maintenance', 'Tile image'])
 
-def add_csv_row(title, description, details, pakaging, modelings, installations, maintenance, tile_image):
+def add_csv_row(title, description, details, pakaging, modelings, installations, maintenances, tile_image):
 
     with open(output_file, 'a', newline='', encoding="utf-8") as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow([title, description, details, pakaging, modelings, installations, maintenance, tile_image])
+        writer.writerow([title, description, details, pakaging, modelings, installations, maintenances, tile_image])
 
 option = webdriver.ChromeOptions()
 option.add_argument('headless')
@@ -194,10 +194,10 @@ for page_url in page_urls:
         
         navs[5].click()
         try:
-            maintenance = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
+            maintenances = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
         except:
             print("No maintenance")
-            maintenance = 'N/A'
+            maintenances = 'N/A'
     elif nav_checker == 'Moldings':
         navs[1].click()
         details = ''
@@ -259,7 +259,7 @@ for page_url in page_urls:
         except:
             print("No installations")
         
-        maintenance = 'N/A'
+        maintenances = 'N/A'
 
     else:
         navs[1].click()
@@ -307,7 +307,7 @@ for page_url in page_urls:
         
         navs[4].click()
         try:
-            maintenance = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
+            maintenances = driver.find_element_by_xpath('//div[@class="tab-pane active"]/div/div/div/div/p').text
         except:
             print("No maintenance")
         modelings = 'N/A'
@@ -324,7 +324,7 @@ for page_url in page_urls:
         print("No tile_image")
         tile_image = 'N/A'
 
-    add_csv_row(title, description, details, pakaging, modelings, installations, maintenance, tile_image)
+    add_csv_row(title, description, details, pakaging, modelings, installations, maintenances, title_image) 
 
     print("detail page done")
     print(count)
