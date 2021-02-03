@@ -17,7 +17,7 @@ print(now)
 def add_csv_head():
     with open(output_file, 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow(['Title'',sub-title','Description','Details','Brand','Collection','Style Name','Style Number','construction','Material','Backing','Wear Layer Thickness','Total Thickness','Width','Finish','Top' 'Surface','Interlayer','Design','Weight','Modelings','Installations','installation_method','Maintenance','Tile image'])
+        writer.writerow(['Title','sub-title','Description','Details','Brand','Collection','Style Name','Style Number','construction','Material','Backing','Wear Layer Thickness','Total Thickness','Width','Finish','Top' 'Surface','Interlayer','Design','Weight','Modelings','Installations','installation_method','Maintenance','Tile image'])
 
 def add_csv_row(title,sub_title,description,details,brand,collection,style_name,style_number,construction,material,backing,wear_layer_thickness,total_thickness,width,finish,top_surface,interlayer,design,weight,modelings,installations,installation_method,maintenance,tile_image):
 
@@ -74,6 +74,11 @@ for page_url in page_urls:
         driver.close()
         driver = selenium.webdriver.Chrome()
         driver.get(page_url)
+        try:
+            accept_button = driver.find_element_by_xpath('//button[@class="btn btn-secondary"]')
+            accept_button.click()
+        except:
+            print('No button')
     time.sleep(5)
     # Title scrape
     try:
@@ -95,13 +100,12 @@ for page_url in page_urls:
     details = ''
     try:
         details_tmp = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/section/ul/li')
-        details += "'"
         for detail_tmp in details_tmp:
-            description += detail_tmp.text + "\n"
-        details += "'"
+            details += detail_tmp.text + "\n"
     except:
-        print('No description2')
-        details = 'N/A'
+        details += 'N/A'
+        print('No details1')
+        
        
     navs = driver.find_elements_by_xpath('//ul[@class="nav"]/li[@class="nav-item"]')
     # Details scrape
@@ -112,6 +116,23 @@ for page_url in page_urls:
     nav_checker = nav_check[3].text
 
     brand = ''
+    collection = ''
+    style_name = ''
+    style_number = ''
+    construction = ''
+    material = ''
+    backing = ''
+    wear_layer_thickness = ''
+    total_thickness = ''
+    width = ''
+    finish = ''
+    top_surface = ''
+    interlayer = ''
+    design = ''
+    weight = ''
+    installation_method = ''
+    maintenance = ''
+
     if navs_length == 6:
         navs[1].click()
         details = ''
@@ -245,8 +266,6 @@ for page_url in page_urls:
         navs[1].click()
         try:
             details2 = driver.find_elements_by_xpath('//div[@class="tab-pane active"]/div/div/dl/dd')
-            length = len(details2)
-            i = 0
             brand = details2[0].text
             collection = details2[1].text
             style_name = details2[2].text
@@ -256,13 +275,27 @@ for page_url in page_urls:
             backing = details2[6].text
             wear_layer_thickness = details2[7].text
             total_thickness = details2[8].text
-            width = details[9].text
-            finish = details[10].text
-            top_surface = details[11].text
-            interlayer = details[12].text
-            design = details[13].text
+            width = details2[9].text
+            finish = details2[10].text
+            top_surface = details2[11].text
+            interlayer = details2[12].text
+            design = details2[13].text
 
         except:
+            brand = "N/A"
+            collection = "N/A"
+            style_name = "N/A"
+            style_number = "N/A"
+            construction = "N/A"
+            material = "N/A"
+            backing = "N/A"
+            wear_layer_thickness = "N/A"
+            total_thickness = "N/A"
+            width = "N/A"
+            finish = "N/A"
+            top_surface = "N/A"
+            interlayer = "N/A"
+            design = "N/A"
             print("No details")
 
         navs[2].click()
@@ -280,11 +313,9 @@ for page_url in page_urls:
             installations2 = driver.find_elements_by_xpath('//div[@class="tw-w-full tw-flex tw-flex-wrap"]/div/p')
             installations3 = driver.find_elements_by_xpath('//div[@class="tw-flex tw-flex-wrap"]/div/p')
             for installation2 in installations2:
-                installations += "<p>" + installation2.text + "</p>"
-            installation_method += '"' 
+                installations += installation2.text + ","
             for installation3 in installations3:
                 installation_method += installation3.text + ","
-            installation_method += '"'
         except:
             print("No installations")
             installation_method = "N/A"
